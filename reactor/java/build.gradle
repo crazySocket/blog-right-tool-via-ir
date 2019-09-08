@@ -1,0 +1,14 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+repositories
+{
+    mavenCentral()
+}
+
+dependencies
+{
+    implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.2.12.RELEASE'
+}
+
+mainClassName = 'Main'
