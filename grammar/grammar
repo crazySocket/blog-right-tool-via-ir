@@ -1,0 +1,34 @@
+
+
+/*
+set: e, Req, Tf, Dq, T, D, Res
+rules:
+    e -> Req
+    e -> Req e
+    Req -> Tf Dq
+    Tf -> T
+    Dq -> D
+    T D -> Res
+    Res -> e
+*/
+
+/*
+set: S, $, Message, Line, Key, Value
+rules:
+    S -> Message
+    Message -> Line \n Message
+    Message -> $
+    Line -> Key:Value
+    Key -> alnum Key
+    Key -> e
+    Value -> alnum Value
+    Value -> e
+*/
+
+/*
+example input:
+
+a:1
+b:2
+text:hello world
+*/
