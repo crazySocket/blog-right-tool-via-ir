@@ -85,9 +85,11 @@ namespace parser
     namespace result
     {
         struct error {};
-        struct consumed
+        struct consumed {};
+        struct finished
         {
-            bool do_continue = true;
+            bool consume;
+            bool frame;
         };
         struct rejected {};
         struct append_symbols
@@ -98,14 +100,21 @@ namespace parser
         {
             frame::any frame;
         };
-        struct any : std::variant<error, consumed, rejected, append_symbols, change_frame> {};
+        struct any : std::variant<error, consumed, finished, rejected, append_symbols, change_frame> {};
     }
 
     template<typename S, typename F>
     result::any parse(S symbol, F & frame, char next_char)
     {
         cout << __PRETTY_FUNCTION__ << endl;
-        exit(1);
+        return {result::error{}};
+    }
+
+    template<typename S, typename F>
+    result::any parse(S symbol, F & frame)
+    {
+        cout << __PRETTY_FUNCTION__ << endl;
+        return {result::error{}};
     }
 }
 
@@ -135,7 +144,7 @@ template<>
 parser::result::any parser::parse(symbol::new_line, frame::line & frame, char next_char)
 {
     cout << __PRETTY_FUNCTION__ << endl;
-    return {result::consumed{.do_continue = false}};
+    return {result::finished{.consume = true, .frame = true}};
 }
 
 template<>
@@ -155,7 +164,7 @@ template<>
 parser::result::any parser::parse(symbol::colon, frame::line & frame, char next_char)
 {
     cout << __PRETTY_FUNCTION__ << endl;
-    return {result::consumed{.do_continue = false}};
+    return {result::finished{.consume = true, .frame = false}};
 }
 
 template<>
@@ -206,14 +215,14 @@ parser::result::any parser::parse(symbol::message, frame::message & frame, char 
     {
         result::append_symbols
         {
-            .symbols = {symbol::line{}}
+            .symbols = {symbol::line{}, symbol::message{}}
         }
     };
 }
 
 int main()
 {
-    const std::string_view input = "text:hello world\n";
+    const std::string_view input = "text:hello world\nasdf:qwer\n";
     auto input_it = input.begin();
 
     data::message message;
@@ -223,25 +232,42 @@ int main()
     queue.push_back(symbol::message{});
     backtrace.push_back(frame::message{&message});
 
-    while(not queue.empty() and input_it != input.end())
+    while(not queue.empty())
     {
         print_queue(queue);
 
         symbol::any symbol = queue.back();
         queue.pop_back();
         frame::any & frame = backtrace.back();
-        const char next_char = *input_it;
 
         cout << boost::format("next symbol '%s'\n") % to_string(symbol);
-        cout << boost::format("next char: '%x'\n") % int(next_char);
 
-        auto result = std::visit(
-            [next_char](auto symbol, auto & frame)
-            {
-                return parser::parse(symbol, frame, next_char);
-            },
-            symbol, frame
-        );
+        parser::result::any result;
+
+        if(input_it != input.end())
+        {
+            const char next_char = *input_it;
+
+            cout << boost::format("next char: '%x'\n") % int(next_char);
+
+            result = std::visit(
+                [next_char](auto symbol, auto & frame)
+                {
+                    return parser::parse(symbol, frame, next_char);
+                },
+                symbol, frame
+            );
+        }
+        else
+        {
+            result = std::visit(
+                [](auto symbol, auto & frame)
+                {
+                    return parser::parse(symbol, frame);
+                },
+                symbol, frame
+            );
+        }
 
         if(std::holds_alternative<parser::result::error>(result))
         {
@@ -250,9 +276,18 @@ int main()
         else if(std::holds_alternative<parser::result::consumed>(result))
         {
             input_it++;
-            if(std::get<parser::result::consumed>(result).do_continue)
+            queue.push_back(symbol);
+        }
+        else if(std::holds_alternative<parser::result::finished>(result))
+        {
+            auto result_finished = std::get<parser::result::finished>(result);
+            if(result_finished.consume)
             {
-                queue.push_back(symbol);
+                input_it++;
+            }
+            if(result_finished.frame)
+            {
+                backtrace.pop_back();
             }
         }
         else if(std::holds_alternative<parser::result::rejected>(result))
