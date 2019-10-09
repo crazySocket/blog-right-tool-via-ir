@@ -1,0 +1,66 @@
+\begin{frame}[fragile]
+    \frametitle{input}
+    \begin{verbatim}
+Location: http://www.google.com/
+Content-Type: text/html; charset=UTF-8
+Date: Thu, 10 Oct 2019 11:01:01 GMT
+Expires: Sat, 09 Nov 2019 11:01:01 GMT
+Cache-Control: public, max-age=2592000
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}
+    \frametitle{grammar}
+    \begin{columns}
+        \begin{column}{.48\textwidth}
+            transitions
+            \begin{itemize}
+                \item S $\rightarrow$ M
+                \item M $\rightarrow$ L M
+                \item M $\rightarrow$ e
+                \item L $\rightarrow$ K : V \textbackslash n
+                \item K $\rightarrow$ T
+                \item V $\rightarrow$ T
+                \item T $\rightarrow$ char char*
+                \item char* $\rightarrow$ e
+            \end{itemize}
+        \end{column}
+    \hfill
+        \begin{column}{.48\textwidth}
+            nonterminals
+            \begin{itemize}
+                \item S
+                \item M
+                \item L
+                \item K
+                \item V
+                \item T
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{associations}
+    \begin{center}
+        \tikz[baseline] { \node[anchor=base,fill=red!20] {key} }
+        \tikz[baseline] { \node[anchor=base,fill=green!20] {char\{:\}} }
+        \tikz[baseline] { \node[anchor=base,fill=blue!20] {value} }
+
+        \tikz[baseline] { \node[anchor=base,fill=red!20] {text} }
+        \tikz[baseline] { \node[anchor=base,fill=green!20] {:} }
+        \tikz[baseline] { \node[anchor=base,fill=blue!20] {hello world} }
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{plan}
+    \begin{enumerate}
+        \item<+-> grammar generates input
+        \item<+-> nonterminals represent meaning
+        \item<+-> replace nonterminals with terminals
+        \item<+-> compare terminals to input
+        \item<+-> confirm grammar generates expected input
+        \item<+-> store meaning in internal representation
+    \end{enumerate}
+\end{frame}

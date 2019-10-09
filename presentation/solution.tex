@@ -1,0 +1,267 @@
+\subsection{solution c}
+
+\begin{frame}
+    \frametitle{solution c}
+    \begin{columns}
+        \begin{column}{.48\textwidth}
+            problems
+            \begin{itemize}
+                \item magic numbers
+                \item details obscure logic
+                \item null-terminated strings
+                \item global accumulators
+            \end{itemize}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            improvements
+            \begin{itemize}
+                \item string container
+                \item stack container
+                \item enum class
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\subsection{solution c++}
+
+\begin{frame}
+    \frametitle{solution c++ v0}
+    \begin{columns}
+        \begin{column}{.48\textwidth}
+            problems
+            \begin{itemize}
+                \item big switch
+                \item enum class
+                \item global accumulators
+            \end{itemize}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            improvements
+            \begin{itemize}
+                \item symbol sum type
+                \item pattern matching
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{solution c++ v1}
+    problems
+    \begin{itemize}
+        \item overloaded
+        \item visit
+        \item global accumulators
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{pattern matcher}
+    \begin{minted}{c++}
+struct matcher
+{
+    void operator()(int);
+    void operator()(struct A);
+    template<typename T> void operator()(std::vector<T>);
+};
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{overloaded}
+    \begin{minted}{c++}
+template<typename ... Ts>
+struct overloaded : Ts...
+{
+    using Ts::operator()...;
+};
+
+template<typename ... Ts>
+overloaded(Ts...) -> overloaded<Ts...>;
+    \end{minted}
+\end{frame}
+
+\begin{frame}
+    \frametitle{templates}
+    \begin{itemize}
+        \item glorified macros
+        \item syntax over semantics
+        \item discouraged
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{solution c++ v1}
+    improvements
+    \begin{itemize}
+        \item procedural paradigm
+        \item internal representation
+        \item simple context
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{solution c++ v2}
+    \begin{columns}
+        \begin{column}{.48\textwidth}
+            problems
+            \begin{itemize}
+                \item control coupling
+            \end{itemize}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            improvements
+            \begin{itemize}
+                \item generic input
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{solution c++ v3}
+    \begin{columns}
+        \begin{column}{.48\textwidth}
+            problems
+            \begin{itemize}
+                \item control coupling
+            \end{itemize}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            improvements
+            \begin{itemize}
+                \item separate concerns
+                \begin{itemize}
+                    \item parsing
+                    \item input control
+                \end{itemize}
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{solution c++ v4}
+    \begin{columns}
+        \begin{column}{.48\textwidth}
+            problems
+            \begin{itemize}
+                \item global accumulators
+                \item semi union
+            \end{itemize}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            improvements
+            \begin{itemize}
+                \item parse sum type
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{solution c++ v5}
+    \begin{columns}
+        \begin{column}{.48\textwidth}
+            problems
+            \begin{itemize}
+                \item global accumulators
+            \end{itemize}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            improvements
+            \begin{itemize}
+                \item closures
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{solution c++ v6}
+    \begin{columns}
+        \begin{column}{.48\textwidth}
+            problems
+            \begin{itemize}
+                \item parser internal state
+            \end{itemize}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            improvements
+            \begin{itemize}
+                \item separate data from behaviour
+                \item parser trait
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{solution c++ v7}
+    \begin{columns}
+        \begin{column}{.48\textwidth}
+            problems
+            \begin{itemize}
+                \item parser internal state
+                \item does not preserve invariant
+            \end{itemize}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            improvements
+            \begin{itemize}
+                \item reintroduce symbols
+                \item parse symbols not input
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{solution c++ v8}
+    \begin{columns}
+        \begin{column}{.48\textwidth}
+            problems
+            \begin{itemize}
+                \item manipulate frame
+                \item big while
+            \end{itemize}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            improvements
+            \begin{itemize}
+                \item symbol character
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{solution c++ v9}
+    \begin{columns}
+        \begin{column}{.48\textwidth}
+            problems
+            \begin{itemize}
+                \item 350 lines
+                \item big while
+            \end{itemize}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            improvements
+            \begin{itemize}
+                \item divide
+                \item makefile
+                \item parser table
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{solution c++ v10}
+    problems
+    \begin{itemize}
+        \item big while
+    \end{itemize}
+\end{frame}

@@ -1,0 +1,114 @@
+\begin{frame}
+    \frametitle{usual examples}
+    \begin{itemize}
+        \item ridiculous
+        \item unreal
+        \item over engineered
+        \item play to their strengths
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{over engineered}
+        \begin{minted}{c++}
+const std::vector<T> queue;
+    \end{minted}
+    \begin{minted}{c++}
+for(const auto it = queue.rbegin();
+    it != queue.rend(); it++)
+{
+    cout << to_string(i) << endl;
+}
+    \end{minted}
+    \begin{minted}{c++}
+for(const auto & i : reverse(queue))
+{
+    cout << to_string(i) << endl;
+}
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{helper structures}
+    \begin{minted}{c++}
+template<typename T>
+struct reverse_wrapper
+{
+    T & iterable;
+};
+
+template<typename T>
+reverse_wrapper<T> reverse(T & t)
+{
+    return {t};
+}
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{helper functions}
+    \begin{minted}{c++}
+template<typename T>
+auto begin(reverse_wrapper<T> & wrapper)
+{
+    return std::rbegin(wrapper.iterable);
+}
+
+template<typename T>
+auto end(reverse_wrapper<T> & wrapper)
+{
+    return std::rend(wrapper.iterable);
+}
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{play to their strengths}
+        \begin{minted}{c++}
+const std::vector<float> data;
+    \end{minted}
+    \begin{minted}{c++}
+float sum = 0;
+for(float x : data)
+{
+    sum += x;
+}
+    \end{minted}
+    \begin{minted}{c++}
+float sum = std::accumulate(
+    std::begin(data),
+    std::end(data),
+    0.0
+);
+    \end{minted}
+    \begin{itemize}
+        \item <2-> what is $0.0$ ?
+        \item <3-> why use magic number ?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{extensibility}
+    \begin{itemize}
+        \item<+-> no! I want the job done now!
+        \item<+-> correctness over extensions
+        \item<+-> polimorfizm is no longer cool
+        \item<+-> polimorfizm != dynamic dispatch
+        \item<+-> composition over inheritance
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{plan}
+    \begin{enumerate}
+        \item meaningful and nontrivial application
+        \item solve problem in C
+        \item solve problem in C++
+        \item mutate to improve
+        \begin{enumerate}
+            \item correctness
+            \item readability
+            \item maintainability
+        \end{enumerate}
+    \end{enumerate}
+\end{frame}

@@ -34,12 +34,12 @@ const char * symbol_to_string(enum symbol symbol)
 #undef SYMBOL_CASE
 }
 
-void print_queue(enum symbol queue[], int queue_top)
+void print_stack(enum symbol stack[], int stack_top)
 {
-    printf("queue\n{\n");
-    for(int i = queue_top; i > -1; i--)
+    printf("stack\n{\n");
+    for(int i = stack_top; i > -1; i--)
     {
-        printf("\t%s\n", symbol_to_string(queue[i]));
+        printf("\t%s\n", symbol_to_string(stack[i]));
     }
     printf("}\n");
 }
@@ -50,9 +50,9 @@ int main()
     const unsigned input_size = sizeof(input)/sizeof(input[0]) - 1;  // minus \0
     const char * input_it = input;
     const char * input_end = input + input_size;
-    enum symbol queue[input_size];
-    int queue_top = 0;
-    queue[queue_top] = SYMBOL_START;
+    enum symbol stack[input_size];
+    int stack_top = 0;
+    stack[stack_top] = SYMBOL_START;
 
     char key[input_size];
     unsigned key_it = 0;
@@ -62,11 +62,11 @@ int main()
     char * field = NULL;
     unsigned * field_it = NULL;
 
-    while(queue_top > -1 && input_it != input_end)
+    while(stack_top > -1 && input_it != input_end)
     {
-        print_queue(queue, queue_top);
+        print_stack(stack, stack_top);
 
-        const enum symbol symbol = queue[queue_top--];
+        const enum symbol symbol = stack[stack_top--];
         const char next_char = *input_it;
 
         printf("next symbol '%s'\n", symbol_to_string(symbol));
@@ -74,30 +74,30 @@ int main()
 
         switch (symbol) {
             case SYMBOL_START:
-                queue[++queue_top] = SYMBOL_MESSAGE;
+                stack[++stack_top] = SYMBOL_MESSAGE;
             break;
             case SYMBOL_MESSAGE:
-                queue[++queue_top] = SYMBOL_CHARACTER_NL;
-                queue[++queue_top] = SYMBOL_LINE;
+                stack[++stack_top] = SYMBOL_CHARACTER_NL;
+                stack[++stack_top] = SYMBOL_LINE;
             break;
             case SYMBOL_LINE:
-                queue[++queue_top] = SYMBOL_VALUE;
-                queue[++queue_top] = SYMBOL_CHARACTER_COLON;
-                queue[++queue_top] = SYMBOL_KEY;
+                stack[++stack_top] = SYMBOL_VALUE;
+                stack[++stack_top] = SYMBOL_CHARACTER_COLON;
+                stack[++stack_top] = SYMBOL_KEY;
             break;
             case SYMBOL_KEY:
                 field = key;
                 field_it = &key_it;
-                queue[++queue_top] = SYMBOL_TEXT;
+                stack[++stack_top] = SYMBOL_TEXT;
             break;
             case SYMBOL_VALUE:
                 field = value;
                 field_it = &value_it;
-                queue[++queue_top] = SYMBOL_TEXT;
+                stack[++stack_top] = SYMBOL_TEXT;
             break;
             case SYMBOL_TEXT:
-                queue[++queue_top] = SYMBOL_CHARACTER_MORE;
-                queue[++queue_top] = SYMBOL_CHARACTER;
+                stack[++stack_top] = SYMBOL_CHARACTER_MORE;
+                stack[++stack_top] = SYMBOL_CHARACTER;
             break;
             case SYMBOL_CHARACTER:
                 if(isalnum(next_char) || next_char == ' ')
@@ -110,7 +110,7 @@ int main()
                 if(isalnum(next_char) || next_char == ' ')
                 {
                     input_it++;
-                    queue[++queue_top] = SYMBOL_CHARACTER_MORE;
+                    stack[++stack_top] = SYMBOL_CHARACTER_MORE;
                     field[(*field_it)++] = next_char;
                 }
             break;
@@ -135,11 +135,11 @@ int main()
                 }
             break;
         }
-        // getchar();
+        getchar();
     }
 
     exit:
-    if(queue_top == -1 && input_it == input_end)
+    if(stack_top == -1 && input_it == input_end)
     {
         printf("string matches\n");
         key[key_it] = '\0';
@@ -149,6 +149,6 @@ int main()
     else
     {
         printf("string does not match\n");
-        print_queue(queue, queue_top);
+        print_stack(stack, stack_top);
     }
 }

@@ -26,11 +26,11 @@ std::string to_string(symbol::any variant)
     return std::visit([](auto x) { return to_string(x); }, variant);
 }
 
-std::string to_string(std::vector<symbol::any> & queue)
+std::string to_string(std::vector<symbol::any> & stack)
 {
     std::stringstream ss;
-    ss << "queue\n{\n";
-    for(auto it = queue.rbegin(); it != queue.rend(); it++)
+    ss << "stack\n{\n";
+    for(auto it = stack.rbegin(); it != stack.rend(); it++)
     {
         ss << (boost::format("\t%s\n") % to_string(*it)).str();
     }

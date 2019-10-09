@@ -38,10 +38,10 @@ const char * to_string(enum symbol symbol)
     }
 }
 
-void print_queue(std::vector<enum symbol> & queue)
+void print_stack(std::vector<enum symbol> & stack)
 {
-    cout << "queue\n{\n";
-    for(auto it = queue.rbegin(); it != queue.rend(); it++)
+    cout << "stack\n{\n";
+    for(auto it = stack.rbegin(); it != stack.rend(); it++)
     {
         cout << boost::format("\t%s\n") % to_string(*it);
     }
@@ -52,19 +52,19 @@ int main()
 {
     const std::string_view input = "text:hello world\n";
     auto input_it = input.begin();
-    std::vector<enum symbol> queue;
-    queue.push_back(symbol::start);
+    std::vector<enum symbol> stack;
+    stack.push_back(symbol::start);
 
     std::string key;
     std::string value;
     std::string * field;
 
-    while(not queue.empty() and input_it != input.end())
+    while(not stack.empty() and input_it != input.end())
     {
-        print_queue(queue);
+        print_stack(stack);
 
-        const enum symbol symbol = queue.back();
-        queue.pop_back();
+        const enum symbol symbol = stack.back();
+        stack.pop_back();
 
         const char next_char = *input_it;
 
@@ -73,28 +73,28 @@ int main()
 
         switch (symbol) {
             case symbol::start:
-                queue.push_back(symbol::message);
+                stack.push_back(symbol::message);
             break;
             case symbol::message:
-                queue.push_back(symbol::character_nl);
-                queue.push_back(symbol::line);
+                stack.push_back(symbol::character_nl);
+                stack.push_back(symbol::line);
             break;
             case symbol::line:
-                queue.push_back(symbol::value);
-                queue.push_back(symbol::character_colon);
-                queue.push_back(symbol::key);
+                stack.push_back(symbol::value);
+                stack.push_back(symbol::character_colon);
+                stack.push_back(symbol::key);
             break;
             case symbol::key:
                 field = &key;
-                queue.push_back(symbol::text);
+                stack.push_back(symbol::text);
             break;
             case symbol::value:
                 field = &value;
-                queue.push_back(symbol::text);
+                stack.push_back(symbol::text);
             break;
             case symbol::text:
-                queue.push_back(symbol::character_more);
-                queue.push_back(symbol::character);
+                stack.push_back(symbol::character_more);
+                stack.push_back(symbol::character);
             break;
             case symbol::character:
                 if(isalnum(next_char) || next_char == ' ')
@@ -107,7 +107,7 @@ int main()
                 if(isalnum(next_char) || next_char == ' ')
                 {
                     input_it++;
-                    queue.push_back(symbol::character_more);
+                    stack.push_back(symbol::character_more);
                     field->push_back(next_char);
                 }
             break;
@@ -136,7 +136,7 @@ int main()
     }
 
     exit:
-    if(queue.empty() && input_it == input.end())
+    if(stack.empty() and input_it == input.end())
     {
         cout << "string matches\n";
         cout << boost::format("key: '%s', value: '%s'\n") % key % value;
@@ -144,7 +144,7 @@ int main()
     else
     {
         cout << "string does not match\n";
-        print_queue(queue);
+        print_stack(stack);
     }
 
     return 0;

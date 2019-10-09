@@ -1,0 +1,69 @@
+\begin{frame}
+    \frametitle{parser model}
+    \begin{itemize}
+        \item symbols
+        \item queues (symbols, input)
+        \item use regular grammar to manipulate queues
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{invariant}
+    \begin{itemize}
+        \item invariant: symbol stack contains unmatched symbols
+        \item initialization: push start symbol on stack
+        \item loop:
+        \begin{itemize}
+            \item pop symbol from stack
+            \item find rule to match input
+            \item push unknown symbols on stack
+        \end{itemize}
+        \item termination: if stack is empty, then grammar matched.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{algorithm}
+    \begin{algorithm}[H]
+        symbols.push(S)\;
+        \While{symbols not empty and input not empty}{
+            current\_symbol = symbols.pop()\;
+            current\_char = input.peek()\;
+            \Switch{action(current\_symbol, current\_char)}
+            {
+                ...\;
+            }
+        }
+    \end{algorithm}
+\end{frame}
+
+\begin{frame}
+    \frametitle{algorithm}
+    \begin{algorithm}[H]
+        \scriptsize
+        \Case{mismatch}
+        {
+            symbols.push(current\_symbol)\;
+            \Return\;
+        }
+        \Case{consumed}
+        {
+            input.next()\;
+            symbols.push(current\_symbol)\;
+        }
+        \Case{finished}
+        {
+            \If{consume}
+            {
+                input.next()\;
+            }
+        }
+        \Case{append\_symbols}
+        {
+            \ForEach{symbol in reverse(symbols to add)}
+            {
+                symbols.push(symbol)\;
+            }
+        }
+    \end{algorithm}
+\end{frame}

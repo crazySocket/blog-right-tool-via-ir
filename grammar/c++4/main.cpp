@@ -187,7 +187,7 @@ int main()
         getchar();
     }
 
-    if(backtrace.size() > 1 && input_it == input.end())
+    if(backtrace.size() > 1 and input_it == input.end())
     {
         cout << "string matches\n";
         for(auto line : message.lines)

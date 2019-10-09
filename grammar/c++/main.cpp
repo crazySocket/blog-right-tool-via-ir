@@ -30,10 +30,10 @@ auto end(reverse_wrapper<T> & wrapper)
     return std::rend(wrapper.iterable);
 }
 
-void print_queue(const std::vector<symbols::all> & queue)
+void print_stack(const std::vector<symbols::all> & stack)
 {
-    cout << "queue" << endl << '{' << endl;
-    for(const auto & i : reverse(queue))
+    cout << "stack" << endl << '{' << endl;
+    for(const auto & i : reverse(stack))
     {
         cout << '\t' << to_string(i) << endl;
     }
@@ -44,22 +44,22 @@ int main()
 {
     char input[] = "text:hello world\n";
     auto input_it = std::begin(input);
-    std::vector<symbols::all> queue;
+    std::vector<symbols::all> stack;
 
-    queue.push_back(symbols::S());
+    stack.push_back(symbols::S());
 
-    while(not queue.empty() and input_it != std::end(input))
+    while(not stack.empty() and input_it != std::end(input))
     {
-        auto symbol = queue.back();
+        auto symbol = stack.back();
         char next_char = *input_it;
 
-        print_queue(queue);
+        print_stack(stack);
         cout << next_char << endl;
 
         bool pattern_matches_so_far = std::visit(
-            [next_char, &queue, &input_it](auto symbol)
+            [next_char, &stack, &input_it](auto symbol)
             {
-                return rules::apply_rule(queue, input_it, symbol, next_char);
+                return rules::apply_rule(stack, input_it, symbol, next_char);
             },
             symbol
         );
@@ -70,7 +70,7 @@ int main()
         }
     }
 
-    if(queue.empty())
+    if(stack.empty())
     {
         cout << "text matches grammar" << endl;
     }

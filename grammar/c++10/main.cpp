@@ -19,17 +19,17 @@ int main()
 
     data::message message;
 
-    std::vector<symbol::any> queue;
+    std::vector<symbol::any> stack;
     std::vector<frame::any> backtrace;
-    queue.push_back(symbol::message{});
+    stack.push_back(symbol::message{});
     backtrace.push_back(frame::message{&message});
 
-    while(not queue.empty())
+    while(not stack.empty())
     {
-        cout << to_string(queue) << endl;
+        cout << to_string(stack) << endl;
 
-        symbol::any symbol = queue.back();
-        queue.pop_back();
+        symbol::any symbol = stack.back();
+        stack.pop_back();
         frame::any & frame = backtrace.back();
 
         cout << boost::format("next symbol: `%s'\n") % to_string(symbol);
@@ -63,12 +63,13 @@ int main()
 
         if(std::holds_alternative<parser::result::mismatch>(result))
         {
+            stack.push_back(symbol);
             break;
         }
         else if(std::holds_alternative<parser::result::consumed>(result))
         {
             input_it++;
-            queue.push_back(symbol);
+            stack.push_back(symbol);
         }
         else if(std::holds_alternative<parser::result::finished>(result))
         {
@@ -93,19 +94,19 @@ int main()
             symbols.reverse();
             for(auto symbol : symbols)
             {
-                queue.push_back(symbol);
+                stack.push_back(symbol);
             }
         }
         else if(std::holds_alternative<parser::result::change_frame>(result))
         {
             backtrace.push_back(std::get<parser::result::change_frame>(result).frame);
-            queue.push_back(symbol);
+            stack.push_back(symbol);
         }
 
         getchar();
     }
 
-    if(queue.empty() && input_it == input.end())
+    if(stack.empty() and input_it == input.end())
     {
         cout << "string matches\n";
         for(auto line : message.lines)

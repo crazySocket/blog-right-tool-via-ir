@@ -1,0 +1,10 @@
+*.aux
+*.log
+*.nav
+*.out
+*.pdf
+*.pyg
+*.snm
+*.toc
+*.vrb
+_minted*

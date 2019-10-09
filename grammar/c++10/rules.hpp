@@ -41,6 +41,7 @@ PARSER_TABLE_ENTRY_WITH_INPUT(symbol::key, frame::line)
 PARSER_TABLE_ENTRY_WITH_INPUT(symbol::line, frame::line)
 PARSER_TABLE_ENTRY_WITH_INPUT(symbol::line, frame::message)
 PARSER_TABLE_ENTRY_WITH_INPUT(symbol::message, frame::message)
+PARSER_TABLE_ENTRY_WITHOUT_INPUT(symbol::message, frame::message)
 
 #undef PARSER_TABLE_ENTRY_WITHOUT_INPUT
 #undef PARSER_TABLE_ENTRY_WITH_INPUT

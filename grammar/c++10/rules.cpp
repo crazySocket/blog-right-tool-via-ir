@@ -114,3 +114,10 @@ parser::result::any parser::parse(symbol::message, frame::message & frame, char 
         }
     };
 }
+
+template<>
+parser::result::any parser::parse(symbol::message, frame::message & frame)
+{
+    cout << __PRETTY_FUNCTION__ << endl;
+    return {result::finished{.consume = false, .frame = false}};
+}

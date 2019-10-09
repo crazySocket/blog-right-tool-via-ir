@@ -19,4 +19,4 @@ std::string to_string(symbol::character symbol);
 
 std::string to_string(symbol::any variant);
 
-std::string to_string(std::vector<symbol::any> & queue);
+std::string to_string(std::vector<symbol::any> & stack);

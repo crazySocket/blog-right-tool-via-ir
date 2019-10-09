@@ -50,10 +50,10 @@ std::string to_string(symbol::any variant)
     return std::visit([](auto x) { return to_string(x); }, variant);
 }
 
-void print_queue(std::vector<symbol::any> & queue)
+void print_stack(std::vector<symbol::any> & stack)
 {
-    cout << "queue\n{\n";
-    for(auto it = queue.rbegin(); it != queue.rend(); it++)
+    cout << "stack\n{\n";
+    for(auto it = stack.rbegin(); it != stack.rend(); it++)
     {
         cout << boost::format("\t%s\n") % to_string(*it);
     }
@@ -64,19 +64,19 @@ int main()
 {
     const std::string_view input = "text:hello world\n";
     auto input_it = input.begin();
-    std::vector<symbol::any> queue;
-    queue.push_back(symbol::start{});
+    std::vector<symbol::any> stack;
+    stack.push_back(symbol::start{});
 
     std::string key;
     std::string value;
     std::string * field;
 
-    while(not queue.empty() and input_it != input.end())
+    while(not stack.empty() and input_it != input.end())
     {
-        print_queue(queue);
+        print_stack(stack);
 
-        const symbol::any symbol = queue.back();
-        queue.pop_back();
+        const symbol::any symbol = stack.back();
+        stack.pop_back();
 
         const char next_char = *input_it;
 
@@ -90,33 +90,33 @@ int main()
             {
                 [&](symbol::start)
                 {
-                    queue.push_back(symbol::message{});
+                    stack.push_back(symbol::message{});
                 },
                 [&](symbol::message)
                 {
-                    queue.push_back(symbol::character{'\n'});
-                    queue.push_back(symbol::line{});
+                    stack.push_back(symbol::character{'\n'});
+                    stack.push_back(symbol::line{});
                 },
                 [&](symbol::line)
                 {
-                    queue.push_back(symbol::value{});
-                    queue.push_back(symbol::character{':'});
-                    queue.push_back(symbol::key{});
+                    stack.push_back(symbol::value{});
+                    stack.push_back(symbol::character{':'});
+                    stack.push_back(symbol::key{});
                 },
                 [&](symbol::key)
                 {
                     field = &key;
-                    queue.push_back(symbol::text{});
+                    stack.push_back(symbol::text{});
                 },
                 [&](symbol::value)
                 {
                     field = &value;
-                    queue.push_back(symbol::text{});
+                    stack.push_back(symbol::text{});
                 },
                 [&](symbol::text)
                 {
-                    queue.push_back(symbol::character_more{});
-                    queue.push_back(symbol::character_any{});
+                    stack.push_back(symbol::character_more{});
+                    stack.push_back(symbol::character_any{});
                 },
                 [&](symbol::character_any s)
                 {
@@ -131,7 +131,7 @@ int main()
                     if(isalnum(next_char) || next_char == ' ')
                     {
                         input_it++;
-                        queue.push_back(symbol::character_more{});
+                        stack.push_back(symbol::character_more{});
                         field->push_back(next_char);
                     }
                 },
@@ -158,7 +158,7 @@ int main()
         getchar();
     }
 
-    if(queue.empty() && input_it == input.end())
+    if(stack.empty() and input_it == input.end())
     {
         cout << "string matches\n";
         cout << boost::format("key: '%s', value: '%s'\n") % key % value;
@@ -166,7 +166,7 @@ int main()
     else
     {
         cout << "string does not match\n";
-        print_queue(queue);
+        print_stack(stack);
     }
 
     return 0;

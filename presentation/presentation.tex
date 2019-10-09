@@ -1,0 +1,130 @@
+\documentclass{beamer}
+\usetheme{Frankfurt}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{polski}
+
+\usepackage{amsmath}
+\usepackage[]{algorithm2e}
+\usepackage{minted}
+\usepackage{tikz}
+
+\usetikzlibrary{arrows, shapes}
+
+\title{The intended yet unwanted C++ use cases}
+\author{Michał Pletty}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+    \frametitle{table of contents}
+    \tableofcontents
+\end{frame}
+
+\section{goal}
+
+\input{goal}
+
+\section{method}
+
+\input{method}
+
+\section{parser problem}
+
+\input{problem}
+
+\section{parser model}
+
+\input{model}
+
+\section{solution}
+
+\input{solution}
+
+\section{shifting perspectives}
+
+\begin{frame}
+    \frametitle{developer}
+    \begin{itemize}
+        \item facilities
+        \begin{itemize}
+            \item build
+            \item debug
+            \item distribute
+        \end{itemize}
+        \item support
+        \begin{itemize}
+            \item libraries
+            \item community
+        \end{itemize}
+        \item market demands
+        \item attitude "we are not c++ commitee"
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{programmer}
+    \begin{itemize}
+        \item correctness
+        \begin{itemize}
+            \item invariant
+            \item model
+        \end{itemize}
+        \item asymptotic complexity
+    \end{itemize}
+\end{frame}
+
+\section{rust}
+
+\begin{frame}[fragile]
+    \frametitle{enum}
+    \begin{minted}{rust}
+enum Symbol
+{
+    Message,
+    Line,
+    Key,
+    Value,
+    Character(char)
+}
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{trait}
+    \small
+    \begin{minted}{rust}
+impl std::fmt::Display for Symbol
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter)
+        -> std::fmt::Result
+    {
+        match self
+        {
+            Symbol::Message => write!(f, "Symbol::Message"),
+            Symbol::Line => write!(f, "Symbol::Line"),
+            Symbol::Key => write!(f, "Symbol::Key"),
+            Symbol::Value => write!(f, "Symbol::Value"),
+            Symbol::Character(ch)
+                => write!(f, "Symbol::Character '{}'", ch),
+        }
+    }
+}
+    \end{minted}
+\end{frame}
+
+\section{state machine}
+
+\begin{frame}
+    \frametitle{fsm traits}
+    \begin{itemize}
+        \item fsm::store(M \& m, S s)
+        \item fsm::dispatch(M \& m, E e)
+        \item fsm::transit(M \& m, S \& s, E e)
+    \end{itemize}
+\end{frame}
+
+\end{document}
