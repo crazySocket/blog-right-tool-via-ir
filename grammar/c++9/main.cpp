@@ -108,7 +108,6 @@ namespace parser
             bool consume;
             bool frame;
         };
-        struct rejected {};
         struct append_symbols
         {
             std::list<symbol::any> symbols;
@@ -117,7 +116,7 @@ namespace parser
         {
             frame::any frame;
         };
-        struct any : std::variant<mismatch, consumed, finished, rejected, append_symbols, change_frame> {};
+        struct any : std::variant<mismatch, consumed, finished, append_symbols, change_frame> {};
     }
 
     template<typename S, typename F>
@@ -152,7 +151,7 @@ parser::result::any parser::parse(S, frame::text & frame, char next_char)
         }
         else
         {
-            return {result::rejected{}};
+            return {result::finished{.consume = false, .frame = true}};
         }
     }
 }
@@ -307,10 +306,6 @@ int main()
             {
                 backtrace.pop_back();
             }
-        }
-        else if(std::holds_alternative<parser::result::rejected>(result))
-        {
-            backtrace.pop_back();
         }
         else if(std::holds_alternative<parser::result::append_symbols>(result))
         {
